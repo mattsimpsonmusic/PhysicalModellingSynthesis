@@ -51,6 +51,12 @@ Pout = zeros(nSamples, 1);     % Output
 r_g = 0.99; % Reflection (with loss) at glottis end
 r_l = -0.99; % Reflection (with loss) at lip end
 
+% Define 2D matrix for cross-sectional area values
+mesh_grid = zeros(nSamples, nSegments);
+for n=1:nSegments
+    mesh_grid(n) = (1-((n-1)/(nSegments-1)))*bird(n) + ((n-1)/(nSegments-1))*Q(n);
+end    
+
 %System Update Equations
 
 for n=1:nSamples
@@ -58,7 +64,7 @@ for n=1:nSamples
     % Select a vowel for synthesis
     
     for j=1:nSegments
-        A(j) = bird(j); 
+        A(j) = mesh_grid(j); 
     end
     
     % Reflection coefficients derived from the cross-sectional areas
@@ -107,4 +113,4 @@ xlabel('Frequency (Hz)');
 ylabel('Magnitude Response (dB)');
 
 soundsc(Pout, Fs);
-audiowrite('bird_vib.wav', Pout, Fs);
+audiowrite('2Dtest.wav', Pout, Fs);
