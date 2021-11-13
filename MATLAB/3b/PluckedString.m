@@ -69,7 +69,7 @@ for n = 1:N
   
   % for an N point moving average filter:
   % bridge = r*(1/N)*(right(L) + right(L-1) + ... + right(L-(N-1));
-   bridge = r*0.33*(right(L) + right(L-1) + right(L-2));
+   bridge = r*0.33*(right(L) + right(L-1) + right(L-2)); % 3 point moving average filter
   
   
   % Add a low pass filter to attenuate values at bridge

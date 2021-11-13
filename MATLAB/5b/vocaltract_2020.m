@@ -39,7 +39,7 @@ nSamples = Fs*duration;     % No of speech samples (Pout) required
 uin = zeros(nSamples, 1);
 uin(1)= 200;
 % Read in audio file for more advaned input
-input_file = audioread('LFVib1000ms44100.wav'); % Use wave file as input (replaces uin)
+input_file = audioread('LFInput1000ms44100.wav'); % Use wave file as input (replaces uin)
 
 %Upper and lower delay lines
 u_delay = zeros(nSegments, 1); % Upper Right-going Delay Line
@@ -48,13 +48,14 @@ l_delay = zeros(nSegments, 1); % Lower Left-going Delay Line
 Pout = zeros(nSamples, 1);     % Output
 
 % Boundary Conditions
-r_g = 0.99; % Reflection (with loss) at glottis end
-r_l = -0.99; % Reflection (with loss) at lip end
+r_g = 0.8; % Reflection (with loss) at glottis end
+r_l = -0.98; % Reflection (with loss) at lip end
 
 % Define 2D matrix for cross-sectional area values
-mesh_grid = zeros(nSamples, nSegments);
+mesh_grid = zeros(nSegments, nSamples);
+
 for n=1:nSegments
-    mesh_grid(n) = (1-((n-1)/(nSegments-1)))*bird(n) + ((n-1)/(nSegments-1))*Q(n);
+    mesh_grid(n,:) = linspace(ae(n), U(n), nSamples);
 end    
 
 %System Update Equations
@@ -64,7 +65,7 @@ for n=1:nSamples
     % Select a vowel for synthesis
     
     for j=1:nSegments
-        A(j) = mesh_grid(j); 
+        A(j) = mesh_grid(j, n); 
     end
     
     % Reflection coefficients derived from the cross-sectional areas
